@@ -1,18 +1,51 @@
 import React, { useState } from "react";
+import { loginUserApi } from "../../apis/Api"; // Adjust the import path as needed
+import { useNavigate } from "react-router-dom"; // Make sure you have react-router-dom installed
 
 const Loginpage = () => {
-
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    email: "",
+    password: ""
+  });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const response = await loginUserApi(formData);
+      
+      if (response.data.success) {
+        // Store the token
+        localStorage.setItem("token", response.data.token);
+        // Store user data if needed
+        localStorage.setItem("userData", JSON.stringify(response.data.userData));
+        // Redirect to dashboard or home page
+        navigate("/"); // Adjust the route as needed
+      } else {
+        setError(response.data.message);
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || "An error occurred during login");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
-      {/*
-  Heads up! 👋
-
-  Plugins:
-    - @tailwindcss/forms
-*/}
-
       <section className="relative flex flex-wrap lg:h-[90.6vh] lg:items-center">
         <div className="relative hidden md:block h-64 w-full sm:h-96 lg:h-full lg:w-1/2">
           <img
@@ -33,7 +66,13 @@ const Loginpage = () => {
             </p>
           </div>
 
-          <form action="#" className="mx-auto mb-0 mt-12 max-w-lg space-y-4">
+          {error && (
+            <div className="mx-auto mt-4 max-w-lg">
+              <p className="text-red-500">{error}</p>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="mx-auto mb-0 mt-12 max-w-lg space-y-4">
             <div>
               <label htmlFor="email" className="sr-only">
                 Email
@@ -42,8 +81,12 @@ const Loginpage = () => {
               <div className="relative">
                 <input
                   type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
                   placeholder="Enter email"
+                  required
                 />
 
                 <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
@@ -71,28 +114,38 @@ const Loginpage = () => {
               </label>
 
               <div className="relative">
-              <input
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter a password"
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
-                  />
-                  <button
-                    type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? "👁️" : "👁️‍🗨️"}
-                  </button>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Enter a password"
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                  required
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? "👁️" : "👁️‍🗨️"}
+                </button>
               </div>
             </div>
 
             <button
               type="submit"
-              className=" mt-10 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+              disabled={loading}
+              className={`mt-10 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
+                loading 
+                  ? "bg-gray-400 cursor-not-allowed" 
+                  : "bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+              }`}
             >
-              Sign in
+              {loading ? "Signing in..." : "Sign in"}
             </button>
           </form>
+          
           <div className="mx-auto mb-0 mt-10 max-w-md space-y-4">
             <span className="text-gray-600">Don't have an account? </span>
             <a href="/signup" className="text-gray-900 font-medium">
