@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Upload } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const CampaignPhotoUpload = () => {
+  const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState(null);
 
   const handleFileChange = (event) => {
@@ -10,8 +12,16 @@ const CampaignPhotoUpload = () => {
     }
   };
 
+  const handleContinue = () =>{
+    navigate("/campaignform_deatils_form")
+  }
+  const handlePrevious = () =>{
+    navigate("/campaignform_1")
+    
+  }
+
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50 p-6">
+    <div className="flex justify-center items-center lg:h-[90.6vh] bg-gray-50 p-6">
       <div className="w-full max-w-2xl bg-white rounded-3xl shadow-sm p-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-2xl font-semibold">Create a campaign</h1>
@@ -43,12 +53,14 @@ const CampaignPhotoUpload = () => {
 
           <div className="flex justify-end space-x-4 mt-8">
             <button
+            onClick={handlePrevious}
               type="button"
               className="px-6 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
             >
               Previous
             </button>
             <button
+            onClick={handleContinue}
               type="submit"
               className="px-6 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
             >

@@ -34,6 +34,7 @@ const Loginpage = () => {
         localStorage.setItem("userData", JSON.stringify(response.data.userData));
         // Redirect to dashboard or home page
         navigate("/"); // Adjust the route as needed
+        window.location.reload();
       } else {
         setError(response.data.message);
       }
