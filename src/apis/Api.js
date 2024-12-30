@@ -1,24 +1,25 @@
 import axios from "axios";
 
 const Api = axios.create({
-    baseURL : "http://localhost:5000",
-    withCredentials : true,
-    headers : {
-        "Content-Type" : "multipart/form-data"
-    }
+    baseURL: "http://localhost:5000",
+    withCredentials: true,
 });
 
+// Add default headers
 Api.interceptors.request.use(
     config => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-        console.log('token', token)
-      }
-      return config;
+        const token = localStorage.getItem('token');
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        // Only set multipart header when sending files
+        if (config.data instanceof FormData) {
+            config.headers['Content-Type'] = 'multipart/form-data';
+        }
+        return config;
     },
     error => Promise.reject(error)
-  );
+);
 
 
 //User APIs

@@ -1,24 +1,66 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Upload } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const CampaignPhotoUpload = () => {
   const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  
+  const clearImage = () => {
+    setSelectedFile(null);
+    setPreviewUrl(null);
+    sessionStorage.removeItem('campaign_image_preview');
+    sessionStorage.removeItem('campaign_image_name');
+    sessionStorage.removeItem('campaign_image_type');
+  };
+  
+  useEffect(() => {
+    // Load saved preview URL if exists
+    const savedPreview = sessionStorage.getItem('campaign_image_preview');
+    if (savedPreview) {
+      setPreviewUrl(savedPreview);
+    }
+    return () => {
+      if (window.location.pathname === '/') {
+        clearImage();
+      }
+    }
+  }, []);
+
 
   const handleFileChange = (event) => {
     if (event.target.files && event.target.files[0]) {
-      setSelectedFile(event.target.files[0]);
+      const file = event.target.files[0];
+      setSelectedFile(file);
+      
+      // Store file data
+      sessionStorage.setItem('campaign_image_name', file.name);
+      sessionStorage.setItem('campaign_image_type', file.type);
+      
+      // Create and store preview URL
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result;
+        setPreviewUrl(base64String);
+        sessionStorage.setItem('campaign_image_preview', base64String);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
-  const handleContinue = () =>{
-    navigate("/campaignform_deatils_form")
-  }
-  const handlePrevious = () =>{
-    navigate("/campaignform_1")
-    
-  }
+  const handleContinue = (e) => {
+    e.preventDefault();
+    if (!previewUrl) {
+      alert('Please select an image');
+      return;
+    }
+    navigate("/campaignform_deatils_form");
+  };
+
+  const handlePrevious = () => {
+    navigate("/campaignform_1");
+  };
 
   return (
     <div className="flex justify-center items-center lg:h-[90.6vh] bg-gray-50 p-6">
@@ -41,26 +83,36 @@ const CampaignPhotoUpload = () => {
               accept="image/*"
             />
             <div className="flex flex-col items-center justify-center space-y-4">
-              <div className="p-4 bg-gray-100 rounded-full">
-                <Upload size={32} className="text-gray-600" />
-              </div>
-              <p className="text-lg font-medium">Choose a photo</p>
+              {previewUrl ? (
+                <img 
+                  src={previewUrl} 
+                  alt="Preview" 
+                  className="max-w-full h-auto max-h-48 rounded"
+                />
+              ) : (
+                <>
+                  <div className="p-4 bg-gray-100 rounded-full">
+                    <Upload size={32} className="text-gray-600" />
+                  </div>
+                  <p className="text-lg font-medium">Choose a photo</p>
+                </>
+              )}
               {selectedFile && (
                 <p className="text-sm text-gray-500">Selected: {selectedFile.name}</p>
               )}
             </div>
           </div>
 
-          <div className="flex justify-end space-x-4 mt-8">
+          <div className="flex justify-between mt-8">
             <button
-            onClick={handlePrevious}
+              onClick={handlePrevious}
               type="button"
               className="px-6 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
             >
               Previous
             </button>
             <button
-            onClick={handleContinue}
+              onClick={handleContinue}
               type="submit"
               className="px-6 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
             >
