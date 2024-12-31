@@ -37,7 +37,7 @@ const App = () => {
           <Route path="/campaignform_1" element={<CampaignForm1 />} />
           <Route path="/campaignform_photo_upload" element={<CampaignPhotoUpload />} />
           <Route path="/campaignform_deatils_form" element={<CampaignDetailsForm />} />
-          <Route path="/campaign_details" element={<CampaignDetails />} />
+          <Route path="/campaign/:id" element={<CampaignDetails />} />
           <Route path="/payment" element={<PaymentForm />} />
           <Route path="/thank_you" element={<ThankYouPage />} />
         </Routes>
