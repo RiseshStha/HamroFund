@@ -16,6 +16,7 @@ import PaymentForm from './pages/paymentpage/PaymentForm';
 import ThankYouPage from './pages/paymentpage/ThankyouPage';
 import CampaignDetails from './pages/campaigndetailpage/CampaignDetails';
 import InfoPage from './pages/infopage/InfoPage';
+import EditCampaign from './pages/start_campaignpage/EditCampaign';
 
 const App = () => {
   return (
@@ -40,6 +41,7 @@ const App = () => {
           <Route path="/campaign/:id" element={<CampaignDetails />} />
           <Route path="/payment" element={<PaymentForm />} />
           <Route path="/thank_you" element={<ThankYouPage />} />
+          <Route path="/edit-campaign/:id" element={<EditCampaign />} />
         </Routes>
       </div>
     </>

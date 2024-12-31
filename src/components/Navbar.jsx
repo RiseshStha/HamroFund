@@ -10,6 +10,21 @@ const Navbar = () => {
   const [showMobileMenu, setShowmobileMenu] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(initialIsLoggedIn);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const userDataStr = localStorage.getItem('userData');
+      if (userDataStr) {
+        const user = JSON.parse(userDataStr);
+        setUserData(user);
+      }
+    };
+
+    if (isLoggedIn) {
+      fetchUserData();
+    }
+  }, [isLoggedIn]);
 
   useEffect(() => {
     const handleStorageChange = () => {
@@ -32,7 +47,7 @@ const Navbar = () => {
     };
   }, [showMobileMenu]);
 
-  const handleStartACampaign = () =>{
+  const handleStartACampaign = () => {
     navigate("/campaignform_1");
   }
 
@@ -40,6 +55,7 @@ const Navbar = () => {
     localStorage.clear();
     setIsLoggedIn(false);
     setShowProfileMenu(false);
+    setUserData(null);
     window.location.href = '/login';
   };
 
@@ -56,21 +72,34 @@ const Navbar = () => {
     };
   }, [showProfileMenu]);
 
+  const ProfileIcon = () => {
+    if (userData?.profileImage) {
+      return (
+        <img
+          src={`http://localhost:5000/profiles/${userData.profileImage}`}
+          alt="Profile"
+          className="w-10 h-10 rounded-full object-cover border-2 border-green-400 shadow-md hover:border-green-700 transition-colors"
+        />
+      );
+    }
+    return <UserCircle size={48} className="text-green-700 p-1 rounded-full border-2 border-gray-100 shadow-md hover:border-green-600 transition-colors" />;
+  };
+
   return (
     <>
       <div className="relative top-0 left-0 w-full z-10 bg-white">
-        <div className="mx-auto flex justify-between items-center py-4 px-6 md:px-20 lg:px-20 bg-transparent">
+        <div className="mx-auto flex justify-between items-center py-4 px-6 md:px-12 lg:px-16 bg-transparent">
           <Link to="/" className="cursor-pointer">
             <img src={logo} alt="HamroFund" className="w-16"/>
           </Link>
 
-          <div className="flex gap-20 items-center">
+          <div className="flex lg:gap-32 gap-8 items-center">
             <button
-            onClick={handleStartACampaign} 
-            className="hidden md:block px-10 py-2 bg-green-600 text-white rounded-md">
+              onClick={handleStartACampaign} 
+              className="hidden md:block px-10 py-2 bg-green-600 text-white rounded-md">
               Start a Campaign
             </button>
-            <div className="hidden md:flex gap-20">
+            <div className="hidden md:flex lg:gap-32 gap-8 items-center">
               <Link
                 to="/how-it-works"
                 className="cursor-pointer hover:text-gray-400 text-black"
@@ -84,9 +113,9 @@ const Navbar = () => {
                       e.stopPropagation();
                       setShowProfileMenu(!showProfileMenu);
                     }}
-                    className="flex items-center gap-2 cursor-pointer hover:text-gray-400 text-green-700"
+                    className="flex items-center gap-32 cursor-pointer hover:opacity-80 transition-opacity"
                   >
-                    <UserCircle size={24} />
+                    <ProfileIcon />
                   </button>
                   
                   {showProfileMenu && (
@@ -131,6 +160,7 @@ const Navbar = () => {
           />
         </div>
 
+        {/* Mobile menu */}
         <div
           className={`md:hidden ${
             showMobileMenu ? "fixed w-full" : "h-0 w-0"
@@ -166,6 +196,9 @@ const Navbar = () => {
             </Link>
             {isLoggedIn ? (
               <>
+                <div className="flex items-center gap-2 mb-2">
+                  <ProfileIcon />
+                </div>
                 <Link
                   onClick={() => setShowmobileMenu(false)}
                   to="/profile"

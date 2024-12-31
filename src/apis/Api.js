@@ -31,7 +31,8 @@ export const createCampaignApi = (data) => Api.post('/api/campaign/create', data
 export const getAllCampaignsApi = () => Api.get('/api/campaign/all');
 export const getLatestCampaignsApi = () => Api.get('/api/campaign/latest');
 export const getCampaignByIdApi = (id) => Api.get(`/api/campaign/${id}`);
-export const updateCampaignApi = (id, data) => Api.put(`/api/campaign/${id}`, data);
+export const updateCampaignApi = (id, data) => Api.put(`/api/campaign/update_camp/${id}`, data);
+export const getUserCampaignsApi = (userId) => Api.get(`/api/campaign/get_user_campaign/${userId}`);
 export const deleteCampaignApi = (id) => Api.delete(`/api/campaign/${id}`);
 //update profile image
 export const updateUserProfile = (id, file) => Api.put(`/api/user/update_user_image/${id}`,file)
