@@ -98,6 +98,7 @@ const CampaignDetailsForm = () => {
     try {
       const response = await createCampaignApi(finalFormData);
       if (response.data.success) {
+        clearAllData
         // Clear storage
         ['category', 'province', 'goal'].forEach(key => 
           localStorage.removeItem(`campaign_${key}`)

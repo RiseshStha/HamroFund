@@ -33,6 +33,8 @@ export const getLatestCampaignsApi = () => Api.get('/api/campaign/latest');
 export const getCampaignByIdApi = (id) => Api.get(`/api/campaign/${id}`);
 export const updateCampaignApi = (id, data) => Api.put(`/api/campaign/${id}`, data);
 export const deleteCampaignApi = (id) => Api.delete(`/api/campaign/${id}`);
+//update profile image
+export const updateUserProfile = (id, file) => Api.put(`/api/user/update_user_image/${id}`,file)
 
 //search campaign
 export const searchCampaignsApi = (params) => {

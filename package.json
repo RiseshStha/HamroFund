@@ -10,12 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@react-native-ui-components/alert": "^1.1.0",
     "axios": "^1.7.9",
     "lucide-react": "^0.469.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.1.0",
-    "react-ui-cards": "^3.1.0"
+    "react-ui-cards": "^3.1.0",
+    "shadcn-ui": "^0.9.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

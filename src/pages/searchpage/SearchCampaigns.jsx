@@ -51,6 +51,7 @@ const SearchCampaigns = () => {
 
   // Reset pagination when filters change
   useEffect(() => {
+    window.scrollTo(0, 0);
     setPagination(prev => ({ ...prev, currentPage: 1 }));
   }, [searchQuery, category, sortBy]);
 

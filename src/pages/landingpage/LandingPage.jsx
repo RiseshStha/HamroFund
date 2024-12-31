@@ -13,38 +13,42 @@ const LandingPage = () => {
     const fetchLatestCampaigns = async () => {
       try {
         const response = await getLatestCampaignsApi();
-        console.log('Campaign data:', response.data.campaigns); // Add this line
-        
+        console.log("Campaign data:", response.data.campaigns); // Add this line
+
         const formattedCampaigns = response.data.campaigns.map((campaign) => ({
           id: campaign._id,
           title: campaign.title,
-          author: campaign.creator?.fullName || 'Anonymous',
+          author: campaign.creator?.fullName || "Anonymous",
           raised: campaign.raisedAmount || 0,
           goal: campaign.goal,
-          image: campaign.image
+          image: campaign.image,
         }));
-        console.log('Formatted campaigns:', formattedCampaigns); // Add this line
+        console.log("Formatted campaigns:", formattedCampaigns); // Add this line
         setCampaigns(formattedCampaigns);
       } catch (error) {
-        console.error('Error fetching campaigns:', error);
-        setError('Failed to load campaigns');
+        console.error("Error fetching campaigns:", error);
+        setError("Failed to load campaigns");
       } finally {
         setLoading(false);
       }
     };
-  
+
     fetchLatestCampaigns();
   }, []);
 
   // Function to get image URL
   const getImageUrl = (imageName) => {
     if (!imageName) return "/api/placeholder/400/200";
-    return `${import.meta.env.VITE_BACKEND_URL}/campaigns/${imageName}`; 
-  }; 
+    return `${import.meta.env.VITE_BACKEND_URL}/campaigns/${imageName}`;
+  };
 
   const handleContribute = (campaignId) => {
     navigate(`/campaign/${campaignId}`);
-  }; 
+  };
+
+  const handleViewMore = () => {
+    navigate("/search");
+  };
 
   return (
     <>
@@ -73,7 +77,7 @@ const LandingPage = () => {
           </div>
         </section>
 
-         {/* Latest Campaigns Section */}
+        {/* Latest Campaigns Section */}
         <div className="mt-12 lg:px-24 md:px-10 px-7 mb-11">
           <h2 className="text-2xl font-semibold text-gray-800 mb-10">
             Latest Campaigns
@@ -111,7 +115,7 @@ const LandingPage = () => {
                       Rs {campaign.raised.toLocaleString()} raised out of Rs{" "}
                       {campaign.goal.toLocaleString()}
                     </p>
-                    <button 
+                    <button
                       onClick={() => handleContribute(campaign.id)}
                       className="w-full bg-green-600 text-white py-2 rounded-lg mt-4 hover:bg-green-700"
                     >
@@ -122,9 +126,12 @@ const LandingPage = () => {
               ))}
             </div>
           )}
-          
+
           <div className="mt-6 text-center">
-            <button className="text-green-600 hover:underline">
+            <button
+              onClick={handleViewMore}
+              className="text-green-600 hover:underline"
+            >
               View More →
             </button>
           </div>
