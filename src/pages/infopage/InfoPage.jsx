@@ -4,7 +4,7 @@ import Footer from "../../components/Footer";
 const InfoPage = () => {
   return (
     <>
-      <div className="min-h-screen bg-gray-50 lg:h-[90.6vh] flex items-center justify-center p-8">
+      <div className="bg-gray-50 lg:h-[90.6vh] flex items-center justify-center py-8">
         <div className="w-full max-w-5xl p-10 bg-white rounded-xl shadow-2xl">
           <div className="space-y-8">
             <div>
@@ -70,10 +70,6 @@ const InfoPage = () => {
                 </li>
               </ul>
             </div>
-
-            <button className="mt-8 px-8 py-3 bg-blue-600 text-white text-lg font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg">
-              Start a Fundraiser
-            </button>
           </div>
         </div>
       </div>

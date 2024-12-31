@@ -33,3 +33,18 @@ export const getLatestCampaignsApi = () => Api.get('/api/campaign/latest');
 export const getCampaignByIdApi = (id) => Api.get(`/api/campaign/${id}`);
 export const updateCampaignApi = (id, data) => Api.put(`/api/campaign/${id}`, data);
 export const deleteCampaignApi = (id) => Api.delete(`/api/campaign/${id}`);
+
+//search campaign
+export const searchCampaignsApi = (params) => {
+    // Create a new URLSearchParams object
+    const queryString = new URLSearchParams();
+    
+    // Add parameters if they exist
+    if (params.page) queryString.append('page', params.page);
+    if (params.limit) queryString.append('limit', params.limit);
+    if (params.search) queryString.append('search', params.search);
+    if (params.category) queryString.append('category', params.category);
+    if (params.sortBy) queryString.append('sortBy', params.sortBy);
+    
+    return Api.get(`/api/campaign/search?${queryString.toString()}`);
+};

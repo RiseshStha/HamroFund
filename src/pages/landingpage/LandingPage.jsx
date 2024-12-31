@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Footer from "../../components/Footer";
 import { getLatestCampaignsApi } from "../../apis/Api";
+import { useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
   const [campaigns, setCampaigns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchLatestCampaigns = async () => {
@@ -38,7 +40,11 @@ const LandingPage = () => {
   const getImageUrl = (imageName) => {
     if (!imageName) return "/api/placeholder/400/200";
     return `${import.meta.env.VITE_BACKEND_URL}/campaigns/${imageName}`; 
-  };  
+  }; 
+
+  const handleContribute = (campaignId) => {
+    navigate(`/campaign/${campaignId}`);
+  }; 
 
   return (
     <>
@@ -67,7 +73,7 @@ const LandingPage = () => {
           </div>
         </section>
 
-        {/* Latest Campaigns Section */}
+         {/* Latest Campaigns Section */}
         <div className="mt-12 lg:px-24 md:px-10 px-7 mb-11">
           <h2 className="text-2xl font-semibold text-gray-800 mb-10">
             Latest Campaigns
@@ -81,7 +87,6 @@ const LandingPage = () => {
               <p className="text-red-500">{error}</p>
             </div>
           ) : (
-            /* Campaigns Grid */
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {campaigns.map((campaign) => (
                 <div
@@ -89,16 +94,15 @@ const LandingPage = () => {
                   className="bg-white rounded-lg shadow-sm overflow-hidden"
                 >
                   <div className="h-48 overflow-hidden">
-                  <img
-  src={getImageUrl(campaign.image)}
-  alt={campaign.title}
-  className="w-full h-full object-cover"
-  onError={(e) => {
-    console.log('Image failed to load:', getImageUrl(campaign.image)); // Add this line
-    e.target.onerror = null;
-    e.target.src = "/api/placeholder/400/200";
-  }}
-/>
+                    <img
+                      src={getImageUrl(campaign.image)}
+                      alt={campaign.title}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "/api/placeholder/400/200";
+                      }}
+                    />
                   </div>
                   <div className="p-4">
                     <h3 className="font-bold text-lg">{campaign.title}</h3>
@@ -107,7 +111,10 @@ const LandingPage = () => {
                       Rs {campaign.raised.toLocaleString()} raised out of Rs{" "}
                       {campaign.goal.toLocaleString()}
                     </p>
-                    <button className="w-full bg-green-600 text-white py-2 rounded-lg mt-4 hover:bg-green-700">
+                    <button 
+                      onClick={() => handleContribute(campaign.id)}
+                      className="w-full bg-green-600 text-white py-2 rounded-lg mt-4 hover:bg-green-700"
+                    >
                       Contribute
                     </button>
                   </div>
