@@ -8,6 +8,15 @@ const LandingPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+   const [userData, setUserData] = useState(null);
+  
+     useEffect(() => {
+        const userDataStr = localStorage.getItem('userData');
+        if (userDataStr) {
+          const user = JSON.parse(userDataStr);
+          setUserData(user);
+        }
+      },[]);
 
   useEffect(() => {
     const fetchLatestCampaigns = async () => {
@@ -60,12 +69,12 @@ const LandingPage = () => {
               <h1 className="text-2xl font-bold sm:text-4xl">
                 Crowdfunding for Nepal
               </h1>
-              <p className="mt-10 mb-4 text-gray-500 text-xl sm:text-2xl">
-                For individual and charities
+              <p className="mt-10 mb-4  text-lg sm:text-2xl text-left font-semibold">
+                HamroFund: Let’s fulfill dreams and build the future
+                </p>
+              <p className="mt-10 mb-4 text-xl sm:text-2xl text-left">
+              Start your campaign easily — with simple tools, you can create a great story, set your goals, and share it with others in no time
               </p>
-              <button className="hidden md:block px-12 py-3 bg-green-600 text-white rounded-md">
-                See Campaigns
-              </button>
             </div>
           </div>
           <div className="relative hidden md:block h-64 w-full sm:h-96 lg:h-full lg:w-3/5">
@@ -95,7 +104,8 @@ const LandingPage = () => {
               {campaigns.map((campaign) => (
                 <div
                   key={campaign.id}
-                  className="bg-white rounded-lg shadow-sm overflow-hidden"
+                  className="bg-white rounded-lg shadow-sm cursor-pointer overflow-hidden"
+                  onClick={() => navigate(`/campaign/${campaign.id}`)}
                 >
                   <div className="h-48 overflow-hidden">
                     <img
@@ -116,7 +126,15 @@ const LandingPage = () => {
                       {campaign.goal.toLocaleString()}
                     </p>
                     <button
-                      onClick={() => handleContribute(campaign.id)}
+                       onClick={(e) => {
+                        e.stopPropagation();
+                        if (userData?.profileImage) {
+                          return (
+                            navigate(`/payment/${campaign.id}`)
+                          );
+                        }
+                        return navigate("/login");
+                      }}
                       className="w-full bg-green-600 text-white py-2 rounded-lg mt-4 hover:bg-green-700"
                     >
                       Contribute

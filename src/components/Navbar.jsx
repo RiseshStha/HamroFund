@@ -48,7 +48,13 @@ const Navbar = () => {
   }, [showMobileMenu]);
 
   const handleStartACampaign = () => {
-    navigate("/campaignform_1");
+    if (userData?.profileImage) {
+      return (
+        navigate("/campaignform_1")
+      );
+    }
+    return navigate("/login");
+    
   }
 
   const handleLogout = () => {

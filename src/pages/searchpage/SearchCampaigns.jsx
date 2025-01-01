@@ -18,6 +18,15 @@ const SearchCampaigns = () => {
     itemsPerPage: 6
   });
   const [loading, setLoading] = useState(false);
+  const [userData, setUserData] = useState(null);
+
+   useEffect(() => {
+      const userDataStr = localStorage.getItem('userData');
+      if (userDataStr) {
+        const user = JSON.parse(userDataStr);
+        setUserData(user);
+      }
+    },[]);
 
   // Fetch campaigns with current filters
   const fetchCampaigns = async () => {
@@ -154,7 +163,12 @@ const SearchCampaigns = () => {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      navigate(`/campaign/${campaign._id}/contribute`);
+                      if (userData?.profileImage) {
+                        return (
+                          navigate(`/payment/${campaign._id}`)
+                        );
+                      }
+                      return navigate("/login");
                     }}
                     className="w-full bg-green-600 text-white py-2 rounded-lg mt-4 hover:bg-green-700"
                   >
