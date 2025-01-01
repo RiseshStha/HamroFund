@@ -45,11 +45,11 @@ const MyContributions = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="flex pt-4">
+    <div className="lg:h-[90.6vh] bg-gray-50">
+      <div className="flex min-h-screen pt-4">
         <ProfileNavbar />
 
-        <div className="flex-1 p-6 md:p-8">
+        <div className="flex-1 p-0 md:px-6 bg-white rounded-xl shadow-lg px-4 lg:px-6 py-8 mx-8">
           <div className="max-w-6xl">
             <h1 className="text-2xl font-bold mb-8">My Contributions</h1>
 
@@ -67,59 +67,58 @@ const MyContributions = () => {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-  {contributions.map((contribution) => (
-    <div
-      key={contribution._id}
-      className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-duration-300"
-    >
-      {/* Campaign Image */}
-      <div className="h-40 relative overflow-hidden">
-        <img
-          src={getImageUrl(contribution.campaign?.image)}
-          alt={contribution.campaign?.title}
-          className="h-full w-full object-cover hover:scale-105 transition-transform duration-300"
-          onError={(e) => {
-            e.target.onerror = null;
-            e.target.src = "/api/placeholder/400/200";
-          }}
-        />
-      </div>
+                {contributions.map((contribution) => (
+                  <div
+                    key={contribution._id}
+                    className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-duration-300"
+                  >
+                    {/* Campaign Image */}
+                    <div className="h-40 relative overflow-hidden">
+                      <img
+                        src={getImageUrl(contribution.campaign?.image)}
+                        alt={contribution.campaign?.title}
+                        className="h-full w-full object-cover hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = "/api/placeholder/400/200";
+                        }}
+                      />
+                    </div>
 
-      {/* Contribution Info */}
-      <div className="p-5">
-        <h3 className="text-lg font-semibold mb-2 line-clamp-1">
-          {contribution.campaign?.title}
-        </h3>
-        <div className="space-y-2">
-          <p className="text-gray-600 text-sm">
-            Rs {contribution.amount.toLocaleString()}
-          </p>
-          <div className="flex items-center text-xs text-gray-500">
-            <Calendar size={14} className="mr-1" />
-            <span>
-              {new Date(
-                contribution.paymentDate
-              ).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </span>
-          </div>
-          <button
-            onClick={() =>
-              navigate(`/campaign/${contribution.campaign?._id}`)
-            }
-            className="mt-3 px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors text-sm w-full"
-          >
-            View Campaign
-          </button>
-        </div>
-      </div>
-    </div>
-  ))}
-</div>
-
+                    {/* Contribution Info */}
+                    <div className="p-5">
+                      <h3 className="text-lg font-semibold mb-2 line-clamp-1">
+                        {contribution.campaign?.title}
+                      </h3>
+                      <div className="space-y-2">
+                        <p className="text-gray-600 text-sm">
+                          Rs {contribution.amount.toLocaleString()}
+                        </p>
+                        <div className="flex items-center text-xs text-gray-500">
+                          <Calendar size={14} className="mr-1" />
+                          <span>
+                            {new Date(
+                              contribution.paymentDate
+                            ).toLocaleDateString("en-US", {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            })}
+                          </span>
+                        </div>
+                        <button
+                          onClick={() =>
+                            navigate(`/campaign/${contribution.campaign?._id}`)
+                          }
+                          className="mt-3 px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors text-sm w-full"
+                        >
+                          View Campaign
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
         </div>

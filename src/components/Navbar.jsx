@@ -101,6 +101,12 @@ const Navbar = () => {
             </button>
             <div className="hidden md:flex lg:gap-32 gap-8 items-center">
               <Link
+                to="/search"
+                className="cursor-pointer hover:text-gray-400 text-black"
+              >
+                Campaigns
+              </Link>
+              <Link
                 to="/how-it-works"
                 className="cursor-pointer hover:text-gray-400 text-black"
               >
@@ -125,12 +131,6 @@ const Navbar = () => {
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
                         Profile
-                      </Link>
-                      <Link
-                        to="/my-campaigns"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        My Campaigns
                       </Link>
                       <button
                         onClick={handleLogout}

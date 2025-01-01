@@ -32,11 +32,11 @@ const AlertDialog = ({ isOpen, onClose, onConfirm, title, message }) => {
   );
 };
 
-// Custom Toast Component
+// Custom Toast Component - Moved to top
 const Toast = ({ message, type }) => (
-  <div className={`fixed bottom-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg ${
+  <div className={`fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg ${
     type === 'success' ? 'bg-green-500' : 'bg-red-500'
-  } text-white`}>
+  } text-white transition-opacity duration-300 opacity-90 hover:opacity-100`}>
     {message}
   </div>
 );
@@ -62,7 +62,11 @@ const PublishedCampaigns = () => {
       }
       const response = await getUserCampaignsApi(userData._id);
       if (response.data.success) {
-        setCampaigns(response.data.campaigns);
+        // Sort campaigns by date, newest first
+        const sortedCampaigns = response.data.campaigns.sort((a, b) => 
+          new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        setCampaigns(sortedCampaigns);
       }
     } catch (error) {
       console.error("Error fetching campaigns:", error);
@@ -121,6 +125,11 @@ const PublishedCampaigns = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Toast Notification - Now appears at the top */}
+      {toast.show && (
+        <Toast message={toast.message} type={toast.type} />
+      )}
+
       <div className="flex pt-4">
         <ProfileNavbar />
         
@@ -197,7 +206,7 @@ const PublishedCampaigns = () => {
         </div>
       </div>
 
-      {/* Custom Alert Dialog */}
+      {/* Alert Dialog */}
       <AlertDialog
         isOpen={deleteDialog.open}
         onClose={() => setDeleteDialog({ open: false, campaign: null })}
@@ -205,11 +214,6 @@ const PublishedCampaigns = () => {
         title="Delete Campaign"
         message="Are you sure you want to delete this campaign? This action cannot be undone."
       />
-
-      {/* Toast Notification */}
-      {toast.show && (
-        <Toast message={toast.message} type={toast.type} />
-      )}
     </div>
   );
 };
