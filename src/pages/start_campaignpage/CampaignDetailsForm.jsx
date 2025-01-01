@@ -98,7 +98,6 @@ const CampaignDetailsForm = () => {
     try {
       const response = await createCampaignApi(finalFormData);
       if (response.data.success) {
-        clearAllData
         // Clear storage
         ['category', 'province', 'goal'].forEach(key => 
           localStorage.removeItem(`campaign_${key}`)
@@ -106,6 +105,7 @@ const CampaignDetailsForm = () => {
         ['image_preview', 'image_name', 'image_type'].forEach(key => 
           sessionStorage.removeItem(`campaign_${key}`)
         );
+        clearAllData
         navigate('/');
       }
     } catch (error) {
