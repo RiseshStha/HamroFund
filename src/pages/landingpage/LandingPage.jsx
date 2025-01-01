@@ -7,23 +7,21 @@ const LandingPage = () => {
   const [campaigns, setCampaigns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
-   const [userData, setUserData] = useState(null);
-  
-     useEffect(() => {
-        const userDataStr = localStorage.getItem('userData');
-        if (userDataStr) {
-          const user = JSON.parse(userDataStr);
-          setUserData(user);
-        }
-      },[]);
+
+  useEffect(() => {
+    const userDataStr = localStorage.getItem('userData');
+    if (userDataStr) {
+      const user = JSON.parse(userDataStr);
+      setUserData(user);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchLatestCampaigns = async () => {
       try {
         const response = await getLatestCampaignsApi();
-        console.log("Campaign data:", response.data.campaigns); // Add this line
-
         const formattedCampaigns = response.data.campaigns.map((campaign) => ({
           id: campaign._id,
           title: campaign.title,
@@ -32,7 +30,6 @@ const LandingPage = () => {
           goal: campaign.goal,
           image: campaign.image,
         }));
-        console.log("Formatted campaigns:", formattedCampaigns); // Add this line
         setCampaigns(formattedCampaigns);
       } catch (error) {
         console.error("Error fetching campaigns:", error);
@@ -45,69 +42,67 @@ const LandingPage = () => {
     fetchLatestCampaigns();
   }, []);
 
-  // Function to get image URL
   const getImageUrl = (imageName) => {
     if (!imageName) return "/api/placeholder/400/200";
     return `${import.meta.env.VITE_BACKEND_URL}/campaigns/${imageName}`;
   };
 
-  const handleContribute = (campaignId) => {
-    navigate(`/campaign/${campaignId}`);
-  };
-
-  const handleViewMore = () => {
-    navigate("/search");
-  };
-
   return (
-    <>
-      <div className="min-h-screen bg-gray-50">
-        {/* Header Section */}
-        <section className="relative flex flex-wrap lg:h-[90.6vh] lg:items-center">
-          <div className="w-full border-2 border-gray-200 shadow-md rounded-lg px-4 py-12 sm:px-6 sm:py-16 lg:w-2/5 lg:px-8 lg:py-12 lg:h-full flex">
-            <div className="mx-auto mb-0 mt-24 max-w-lg space-y-6">
-              <h1 className="text-2xl font-bold sm:text-4xl">
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <section className="relative">
+        <div className="relative h-[80vh] sm:h-[90vh] lg:h-[90.6vh]">
+          <img
+            src="https://www.ideaplotting.com/wp-content/uploads/2017/12/tips-crowdfunding.jpeg"
+            alt="Crowdfunding Hero"
+            className="w-full h-full object-cover"
+          />
+          {/* Dark Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/70 to-black/30" />
+
+          {/* Content Overlay */}
+          <div className="absolute inset-0 flex flex-col justify-end px-6 pb-10 sm:p-8 lg:px-12 lg:pb-20 lg:mb-8">
+            <div className="max-w-xl space-y-4">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight">
                 Crowdfunding for Nepal
               </h1>
-              <p className="mt-10 mb-4  text-lg sm:text-2xl text-left font-semibold">
-                HamroFund: Let’s fulfill dreams and build the future
-                </p>
-              <p className="mt-10 mb-4 text-xl sm:text-2xl text-left">
-              Start your campaign easily — with simple tools, you can create a great story, set your goals, and share it with others in no time
+              <p className="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-200">
+                HamroFund: Let's fulfill dreams and build the future
+              </p>
+              <p className="text-base sm:text-lg text-gray-300 max-w-2xl">
+                Start your campaign easily — with simple tools, you can create a great story, 
+                set your goals, and share it with others in no time
               </p>
             </div>
           </div>
-          <div className="relative hidden md:block h-64 w-full sm:h-96 lg:h-full lg:w-3/5">
-            <img
-              alt=""
-              src="https://www.ideaplotting.com/wp-content/uploads/2017/12/tips-crowdfunding.jpeg"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-          </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Latest Campaigns Section */}
-        <div className="mt-12 lg:px-24 md:px-10 px-7 mb-11">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-10">
+      {/* Latest Campaigns Section */}
+      <section className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto">
+          <h2 className="text-2xl sm:text-3xl font-semibold text-gray-800 mb-8">
             Latest Campaigns
           </h2>
+
           {loading ? (
-            <div className="text-center py-10">
-              <p>Loading campaigns...</p>
+            <div className="flex justify-center items-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-4 border-green-500 border-t-transparent"></div>
             </div>
           ) : error ? (
-            <div className="text-center py-10">
-              <p className="text-red-500">{error}</p>
+            <div className="text-center py-12">
+              <p className="text-red-500 text-lg">{error}</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {campaigns.map((campaign) => (
                 <div
                   key={campaign.id}
-                  className="bg-white rounded-lg shadow-sm cursor-pointer overflow-hidden"
+                  className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow 
+                  duration-300 overflow-hidden cursor-pointer transform hover:-translate-y-1"
                   onClick={() => navigate(`/campaign/${campaign.id}`)}
                 >
-                  <div className="h-48 overflow-hidden">
+                  <div className="relative h-48 sm:h-56">
                     <img
                       src={getImageUrl(campaign.image)}
                       alt={campaign.title}
@@ -118,47 +113,65 @@ const LandingPage = () => {
                       }}
                     />
                   </div>
-                  <div className="p-4">
-                    <h3 className="font-bold text-lg">{campaign.title}</h3>
-                    <p className="text-gray-600">By {campaign.author}</p>
-                    <p className="text-sm text-gray-500 mt-2">
-                      Rs {campaign.raised.toLocaleString()} raised out of Rs{" "}
-                      {campaign.goal.toLocaleString()}
-                    </p>
-                    <button
-                       onClick={(e) => {
-                        e.stopPropagation();
-                        if (userData?.profileImage) {
-                          return (
-                            navigate(`/payment/${campaign.id}`)
-                          );
-                        }
-                        return navigate("/login");
-                      }}
-                      className="w-full bg-green-600 text-white py-2 rounded-lg mt-4 hover:bg-green-700"
-                    >
-                      Contribute
-                    </button>
+                  
+                  <div className="p-4 sm:p-6">
+                    <h3 className="font-bold text-lg sm:text-xl mb-2 line-clamp-2">
+                      {campaign.title}
+                    </h3>
+                    <p className="text-gray-600 mb-3">By {campaign.author}</p>
+                    
+                    <div className="space-y-4">
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div
+                          className="bg-green-600 h-2 rounded-full"
+                          style={{
+                            width: `${Math.min((campaign.raised / campaign.goal) * 100, 100)}%`
+                          }}
+                        />
+                      </div>
+                      
+                      <p className="text-sm text-gray-500">
+                        <span className="font-medium text-gray-900">
+                          Rs {campaign.raised.toLocaleString()}
+                        </span>{' '}
+                        raised of Rs {campaign.goal.toLocaleString()}
+                      </p>
+
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (userData?.profileImage) {
+                            navigate(`/payment/${campaign.id}`);
+                          } else {
+                            navigate("/login");
+                          }
+                        }}
+                        className="w-full bg-green-600 text-white py-3 rounded-lg 
+                        hover:bg-green-700 transition-colors font-medium"
+                      >
+                        Contribute
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
           )}
 
-          <div className="mt-6 text-center">
+          <div className="text-center mt-8">
             <button
-              onClick={handleViewMore}
-              className="text-green-600 hover:underline"
+              onClick={() => navigate("/search")}
+              className="text-green-600 hover:text-green-700 font-medium text-lg 
+              hover:underline transition-colors"
             >
               View More →
             </button>
           </div>
         </div>
+      </section>
 
-        {/* Footer */}
-        <Footer />
-      </div>
-    </>
+      <Footer />
+    </div>
   );
 };
 
