@@ -133,7 +133,7 @@ const PublishedCampaigns = () => {
       <div className="flex pt-4">
         <ProfileNavbar />
         
-        <div className="flex-1 p-0 md:px-6">
+        <div className="flex-1 p-0 md:px-6 max-md:py-7">
           <div className="bg-white rounded-xl shadow-lg px-4 lg:px-6 py-8 mx-2">
             <div className="max-w-5xl mx-auto">
               <div className="grid gap-4">

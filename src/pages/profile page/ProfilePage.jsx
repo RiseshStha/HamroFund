@@ -178,7 +178,7 @@ const ProfilePage = () => {
       <div className="relative flex w-full pt-4">
         <ProfileNavbar isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} />
 
-        <div className="flex-1 px-4 lg:px-8">
+        <div className="flex-1 px-4 max-md:py-7 lg:px-8">
           <div className="w-full bg-white rounded-xl shadow-lg px-4 lg:px-8 py-4">
             {alert.show && (
               <Alert type={alert.type} message={alert.message} />
