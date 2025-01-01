@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import CampaignProgressBar from '../../components/CampaignProgressBar';
 
 const CampaignForm1 = () => {
   const navigate = useNavigate();
@@ -71,13 +72,11 @@ const CampaignForm1 = () => {
   };
 
   return (
-    <div className="flex justify-center items-center lg:h-[90.6vh] bg-gray-50 p-6">
+    <div className="flex justify-center items-center lg:h-[89.4vh] bg-gray-50 p-6">
       <div className="w-full max-w-2xl bg-white rounded-3xl shadow-sm p-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-2xl font-semibold">Create a campaign</h1>
-          <span className="inline-flex items-center justify-center w-8 h-8 border-2 border-black rounded-full">
-            1
-          </span>
+          <CampaignProgressBar currentStep={1}/>
         </div>
 
         <form className="space-y-6">
@@ -115,6 +114,9 @@ const CampaignForm1 = () => {
               <option value="province2">Province 2</option>
               <option value="province3">Province 3</option>
               <option value="province4">Province 4</option>
+              <option value="province4">Province 5</option>
+              <option value="province4">Province 6</option>
+              <option value="province4">Province 7</option>
             </select>
           </div>
 

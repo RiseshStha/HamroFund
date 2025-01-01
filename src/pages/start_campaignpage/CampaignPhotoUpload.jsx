@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Upload } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import CampaignProgressBar from '../../components/CampaignProgressBar';
 
 const CampaignPhotoUpload = () => {
   const navigate = useNavigate();
@@ -63,13 +64,11 @@ const CampaignPhotoUpload = () => {
   };
 
   return (
-    <div className="flex justify-center items-center lg:h-[90.6vh] bg-gray-50 p-6">
+    <div className="flex justify-center items-center lg:h-[89.6vh] bg-gray-50 p-6">
       <div className="w-full max-w-2xl bg-white rounded-3xl shadow-sm p-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-2xl font-semibold">Create a campaign</h1>
-          <span className="inline-flex items-center justify-center w-8 h-8 border-2 border-black rounded-full">
-            2
-          </span>
+          <CampaignProgressBar currentStep={2}/>
         </div>
 
         <div className="space-y-6">
