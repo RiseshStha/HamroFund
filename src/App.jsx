@@ -17,6 +17,8 @@ import ThankYouPage from './pages/paymentpage/ThankyouPage';
 import CampaignDetails from './pages/campaigndetailpage/CampaignDetails';
 import InfoPage from './pages/infopage/InfoPage';
 import EditCampaign from './pages/start_campaignpage/EditCampaign';
+import PaymentSuccess from './components/PaymentSuccess';
+import PaymentFailed from './components/PaymentFailed';
 
 const App = () => {
   return (
@@ -39,9 +41,11 @@ const App = () => {
           <Route path="/campaignform_photo_upload" element={<CampaignPhotoUpload />} />
           <Route path="/campaignform_deatils_form" element={<CampaignDetailsForm />} />
           <Route path="/campaign/:id" element={<CampaignDetails />} />
-          <Route path="/payment" element={<PaymentForm />} />
+          <Route path="/payment/:id" element={<PaymentForm />} />
           <Route path="/thank_you" element={<ThankYouPage />} />
           <Route path="/edit-campaign/:id" element={<EditCampaign />} />
+          <Route path="/payment/success" element={<PaymentSuccess />} />
+          <Route path="/payment/failed" element={<PaymentFailed />} />
         </Routes>
       </div>
     </>

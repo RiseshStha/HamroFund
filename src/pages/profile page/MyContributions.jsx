@@ -1,111 +1,108 @@
 import React, { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Calendar, Tag } from 'lucide-react';
+import ProfileNavbar from '../../components/ProfileNavbar';
 
 const MyContributions = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const menuItems = [
-    { id: 1, label: 'Account', active: false },
-    { id: 2, label: 'Campaigns', active: false },
-    { id: 3, label: 'Contributions', active: true },
-  ];
-
+  // Sample data - replace with actual API call
   const contributions = [
     {
       id: 1,
       title: 'Chiya Hub',
       amount: 100,
+      description: 'A cozy space for tea lovers to gather and share their passion for unique blends.',
       image: '/api/placeholder/400/200',
-      bgColor: 'bg-gray-900'
+      category: 'Food & Beverage',
+      createdAt: '2024-01-15'
     },
     {
       id: 2,
       title: 'Gaming Hub',
       amount: 100,
+      description: 'Creating an inclusive gaming community with state-of-the-art facilities.',
       image: '/api/placeholder/400/200',
-      bgColor: 'bg-purple-500'
+      category: 'Entertainment',
+      createdAt: '2024-02-20'
     },
     {
       id: 3,
       title: 'BargainBazzar',
       amount: 100,
+      description: 'Your one-stop marketplace for amazing deals and unique finds.',
       image: '/api/placeholder/400/200',
-      bgColor: 'bg-purple-900'
+      category: 'Retail',
+      createdAt: '2024-03-10'
     },
     {
       id: 4,
       title: 'Note Take',
       amount: 100,
+      description: 'Revolutionary note-taking app designed for modern students and professionals.',
       image: '/api/placeholder/400/200',
-      bgColor: 'bg-yellow-200'
+      category: 'Technology',
+      createdAt: '2024-03-25'
     }
   ];
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Mobile Menu Button */}
-      <div className="md:hidden p-4 bg-white shadow-sm">
-        <button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="text-gray-600 hover:text-green-600"
-        >
-          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-      </div>
+      <div className="flex pt-4">
+        <ProfileNavbar />
+        
+        <div className="flex-1 p-0 md:px-6">
+          <div className="bg-white rounded-xl shadow-lg px-4 lg:px-6 py-8 mx-2">
+            <div className="max-w-5xl mx-auto">
+              <h1 className="text-2xl font-bold mb-8">My Contributions</h1>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {contributions.map((contribution) => (
+                  <div
+                    key={contribution.id}
+                    className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-300"
+                  >
+                    <div className="flex flex-col md:flex-row">
+                      <div className="md:w-56 h-40 md:h-auto relative overflow-hidden">
+                        <img
+                          src={contribution.image}
+                          alt={contribution.title}
+                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
 
-      <div className="flex">
-        {/* Left Sidebar Navigation */}
-        <div className={`
-          ${isMobileMenuOpen ? 'block' : 'hidden'} 
-          md:block 
-          w-64 min-h-screen bg-white shadow-sm p-6
-        `}>
-          <nav className="space-y-2">
-            {menuItems.map(item => (
-              <button
-                key={item.id}
-                className={`w-full text-left px-4 py-2 rounded-lg border ${
-                  item.active 
-                    ? 'text-green-600 border-green-600' 
-                    : 'text-gray-600 border-gray-200 hover:border-green-600 hover:text-green-600'
-                }`}
-              >
-                {item.label}
-              </button>
-            ))}
-          </nav>
-        </div>
-
-        {/* Main Content */}
-        <div className="flex-1 p-6 md:p-8">
-          <div className="max-w-6xl">
-            <h1 className="text-2xl font-bold mb-8">My Contributions</h1>
-
-            {/* Contributions Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {contributions.map(contribution => (
-                <div 
-                  key={contribution.id} 
-                  className="bg-white rounded-lg shadow-sm overflow-hidden"
-                >
-                  {/* Campaign Image */}
-                  <div className={`h-48 ${contribution.bgColor} flex items-center justify-center`}>
-                    <img
-                      src={contribution.image}
-                      alt={contribution.title}
-                      className="h-full w-full object-cover"
-                    />
+                      <div className="flex-1 p-4">
+                        <div className="flex flex-col h-full">
+                          <h3 className="text-lg font-semibold mb-2">
+                            {contribution.title}
+                          </h3>
+                          <div className="flex flex-wrap gap-3 mb-3">
+                            <div className="flex items-center text-gray-600 text-sm">
+                              <span>Rs {contribution.amount.toLocaleString()}</span>
+                            </div>
+                            <div className="flex items-center text-gray-600 text-sm">
+                              <Tag size={16} className="mr-1" />
+                              <span className="capitalize">{contribution.category}</span>
+                            </div>
+                            <div className="flex items-center text-gray-600 text-sm">
+                              <Calendar size={16} className="mr-1" />
+                              <span>
+                                {new Date(contribution.createdAt).toLocaleDateString()}
+                              </span>
+                            </div>
+                          </div>
+                          <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                            {contribution.description}
+                          </p>
+                          <div className="flex gap-3 mt-auto justify-end">
+                            <button
+                              className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm w-60"
+                            >
+                              View Campaign
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-
-                  {/* Contribution Info */}
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold mb-2">{contribution.title}</h3>
-                    <p className="text-gray-600">
-                      Sijan have contributed Rs {contribution.amount} in {contribution.title}
-                    </p>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </div>

@@ -51,3 +51,7 @@ export const searchCampaignsApi = (params) => {
     
     return Api.get(`/api/campaign/search?${queryString.toString()}`);
 };
+
+//payment apis
+export const initiatePaymentApi = (data) => Api.post('/api/payment/initiate', data);
+export const getMyContributionsApi = () => Api.get('/api/payment/my-contributions');

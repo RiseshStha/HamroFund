@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { User } from 'lucide-react';
-import Footer from '../../components/Footer';
-import { getCampaignByIdApi } from '../../apis/Api';
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { User } from "lucide-react";
+import Footer from "../../components/Footer";
+import { getCampaignByIdApi } from "../../apis/Api";
 
 const CampaignDetails = () => {
   const [campaign, setCampaign] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { id } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -17,8 +18,8 @@ const CampaignDetails = () => {
         const response = await getCampaignByIdApi(id);
         setCampaign(response.data.campaign);
       } catch (error) {
-        console.error('Error fetching campaign details:', error);
-        setError('Failed to load campaign details');
+        console.error("Error fetching campaign details:", error);
+        setError("Failed to load campaign details");
       } finally {
         setLoading(false);
       }
@@ -35,15 +36,27 @@ const CampaignDetails = () => {
   };
 
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Loading...
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="min-h-screen flex items-center justify-center text-red-500">{error}</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center text-red-500">
+        {error}
+      </div>
+    );
   }
 
   if (!campaign) {
-    return <div className="min-h-screen flex items-center justify-center">Campaign not found</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Campaign not found
+      </div>
+    );
   }
 
   const calculateProgress = () => {
@@ -52,9 +65,9 @@ const CampaignDetails = () => {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return new Intl.RelativeTimeFormat('en', { numeric: 'auto' }).format(
+    return new Intl.RelativeTimeFormat("en", { numeric: "auto" }).format(
       Math.ceil((date - new Date()) / (1000 * 60 * 60 * 24)),
-      'day'
+      "day"
     );
   };
 
@@ -66,7 +79,7 @@ const CampaignDetails = () => {
           <div className="lg:col-span-2 space-y-8">
             <div className="bg-white rounded-xl shadow-lg p-8">
               <h1 className="text-3xl font-bold mb-8">{campaign.title}</h1>
-              
+
               <div className="rounded-xl overflow-hidden mb-8 h-96">
                 <img
                   src={getImageUrl(campaign.image)}
@@ -84,8 +97,13 @@ const CampaignDetails = () => {
                   <User className="w-8 h-8 text-gray-600" />
                 </div>
                 <div className="text-lg">
-                  <span className="font-semibold">{campaign.creator?.fullName || 'Anonymous'}</span>
-                  <span className="text-gray-600"> is organizing this campaign</span>
+                  <span className="font-semibold">
+                    {campaign.creator?.fullName || "Anonymous"}
+                  </span>
+                  <span className="text-gray-600">
+                    {" "}
+                    is organizing this campaign
+                  </span>
                 </div>
               </div>
 
@@ -102,8 +120,12 @@ const CampaignDetails = () => {
 
               <div className="pt-6">
                 <h2 className="text-2xl font-semibold mb-3">Organizer</h2>
-                <p className="text-gray-600 text-lg">{campaign.creator?.fullName || 'Anonymous'}</p>
-                <p className="text-gray-600 text-lg">{campaign.creator?.email}</p>
+                <p className="text-gray-600 text-lg">
+                  {campaign.creator?.fullName || "Anonymous"}
+                </p>
+                <p className="text-gray-600 text-lg">
+                  {campaign.creator?.email}
+                </p>
               </div>
             </div>
           </div>
@@ -123,13 +145,24 @@ const CampaignDetails = () => {
                 </div>
 
                 <div className="w-full bg-gray-200 rounded-full h-3">
-                  <div 
-                    className="bg-orange-400 h-3 rounded-full" 
+                  <div
+                    className="bg-orange-400 h-3 rounded-full"
                     style={{ width: `${Math.min(calculateProgress(), 100)}%` }}
                   ></div>
                 </div>
 
-                <button className="w-full bg-orange-400 text-white py-4 px-6 rounded-xl text-lg font-semibold hover:bg-orange-500 transition-colors">
+                <button
+                  onClick={() => {
+                    // Check if user is logged in first
+                    const token = localStorage.getItem("token");
+                    if (!token) {
+                      navigate("/login");
+                      return;
+                    }
+                    navigate(`/payment/${campaign._id}`);
+                  }}
+                  className="w-full bg-orange-400 text-white py-4 px-4 rounded-xl text-lg font-semibold hover:bg-orange-500 transition-colors"
+                >
                   Contribute to the Project
                 </button>
 
@@ -143,7 +176,7 @@ const CampaignDetails = () => {
                             <User className="w-6 h-6 text-gray-600" />
                           </div>
                           <span className="text-lg">
-                            {payment.donor?.fullName || 'Anonymous'}
+                            {payment.contributor?.fullName || "Anonymous"}
                           </span>
                         </div>
                       ))}
@@ -155,7 +188,7 @@ const CampaignDetails = () => {
           </div>
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </>
   );
 };
