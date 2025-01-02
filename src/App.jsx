@@ -19,6 +19,7 @@ import InfoPage from './pages/infopage/InfoPage';
 import EditCampaign from './pages/start_campaignpage/EditCampaign';
 import PaymentSuccess from './components/PaymentSuccess';
 import PaymentFailed from './components/PaymentFailed';
+import ForgotPassword from './pages/forgotpasswordpage/ForgotPassword';
 
 const App = () => {
   return (
@@ -32,6 +33,7 @@ const App = () => {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/search" element={<SearchCampaigns />} />
           <Route path="/how-it-works" element={<InfoPage />} />
+          <Route path="/forgot_password" element={<ForgotPassword />} />
 
           {/* Need authorization */}
           <Route path="/profile" element={<ProfilePage />} />

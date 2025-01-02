@@ -42,6 +42,10 @@ const LoginPage = () => {
     }
   };
 
+  const handleForgotPassword = () =>{
+    navigate("/forgot_password");
+  }
+
   return (
     <div className="lg:h-[90.6vh] bg-gradient-to-br from-green-50 to-white flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="flex w-full max-w-6xl shadow-2xl rounded-2xl overflow-hidden bg-white">
@@ -139,7 +143,9 @@ const LoginPage = () => {
                     Remember me
                   </label>
                 </div>
-                <button type="button" className="text-sm text-green-600 hover:text-green-700">
+                <button
+                  onClick={handleForgotPassword}
+                  type="button" className="text-sm text-green-600 hover:text-green-700">
                   Forgot password?
                 </button>
               </div>

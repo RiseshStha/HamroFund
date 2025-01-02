@@ -60,3 +60,7 @@ export const searchCampaignsApi = (params) => {
 //payment apis
 export const initiatePaymentApi = (data) => Api.post('/api/payment/initiate', data);
 export const getMyContributionsApi = () => Api.get('/api/payment/my-contributions');
+
+//Forgot Password
+export const forgotPasswordApi = (data) => Api.post('/api/user/forgot-password', data);
+export const resetPasswordApi = (data) => Api.post('/api/user/reset-password', data);
