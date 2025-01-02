@@ -32,7 +32,7 @@ const AlertDialog = ({ isOpen, onClose, onConfirm, title, message }) => {
   );
 };
 
-// Custom Toast Component - Moved to top
+// Custom Toast Component
 const Toast = ({ message, type }) => (
   <div className={`fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg ${
     type === 'success' ? 'bg-green-500' : 'bg-red-500'
@@ -124,83 +124,99 @@ const PublishedCampaigns = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Toast Notification - Now appears at the top */}
+    <div className="lg:h-[89.6vh] bg-gray-50">
+      {/* Toast Notification */}
       {toast.show && (
         <Toast message={toast.message} type={toast.type} />
       )}
 
-      <div className="flex pt-4">
+      <div className="flex h-full pt-4 max-md:py-10">
         <ProfileNavbar />
         
-        <div className="flex-1 p-0 md:px-6 max-md:py-7">
-          <div className="bg-white rounded-xl shadow-lg px-4 lg:px-6 py-8 mx-2">
-            <div className="max-w-5xl mx-auto">
-              <div className="grid gap-4">
-                {campaigns.map((campaign) => (
-                  <div
-                    key={campaign._id}
-                    className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-300"
+        <div className="flex-1 p-0 md:px-6 max-md:py-7 overflow-y-auto">
+          <div className="bg-white rounded-xl shadow-lg px-4 lg:px-6 py-8 mx-8 min-h-[calc(100vh-120px)]">
+            <div className="max-w-6xl">
+              <h1 className="text-2xl font-bold mb-8">Published Campaigns</h1>
+              
+              {campaigns.length === 0 ? (
+                <div className="text-center py-12 bg-white rounded-lg shadow-sm">
+                  <p className="text-gray-600 mb-4">
+                    You haven't published any campaigns yet.
+                  </p>
+                  <button
+                    onClick={() => navigate("/campaignform_1")}
+                    className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                   >
-                    <div className="flex flex-col md:flex-row">
-                      <div className="md:w-56 h-40 md:h-auto relative overflow-hidden">
-                        <img
-                          src={getImageUrl(campaign.image)}
-                          alt={campaign.title}
-                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                          onError={(e) => {
-                            e.target.onerror = null;
-                            e.target.src = "/api/placeholder/400/200";
-                          }}
-                        />
-                      </div>
+                    Create Campaign
+                  </button>
+                </div>
+              ) : (
+                <div className="grid gap-4">
+                  {campaigns.map((campaign) => (
+                    <div
+                      key={campaign._id}
+                      className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-300"
+                    >
+                      <div className="flex flex-col md:flex-row">
+                        <div className="md:w-56 h-40 md:h-auto relative overflow-hidden">
+                          <img
+                            src={getImageUrl(campaign.image)}
+                            alt={campaign.title}
+                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = "/api/placeholder/400/200";
+                            }}
+                          />
+                        </div>
 
-                      <div className="flex-1 p-4">
-                        <div className="flex flex-col h-full">
-                          <h3 className="text-lg font-semibold mb-2">{campaign.title}</h3>
-                          <div className="flex flex-wrap gap-3 mb-3">
-                            <div className="flex items-center text-gray-600 text-sm">
-                              <span>Rs {campaign.goal.toLocaleString()}</span>
+                        <div className="flex-1 p-4">
+                          <div className="flex flex-col h-full">
+                            <h3 className="text-lg font-semibold mb-2">{campaign.title}</h3>
+                            <div className="flex flex-wrap gap-3 mb-3">
+                              <div className="flex items-center text-gray-600 text-sm">
+                                <span>Rs {campaign.goal.toLocaleString()}</span>
+                              </div>
+                              <div className="flex items-center text-gray-600 text-sm">
+                                <Tag size={16} className="mr-1" />
+                                <span className="capitalize">{campaign.category}</span>
+                              </div>
+                              <div className="flex items-center text-gray-600 text-sm">
+                                <Calendar size={16} className="mr-1" />
+                                <span>{new Date(campaign.createdAt).toLocaleDateString()}</span>
+                              </div>
                             </div>
-                            <div className="flex items-center text-gray-600 text-sm">
-                              <Tag size={16} className="mr-1" />
-                              <span className="capitalize">{campaign.category}</span>
+                            <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                              {campaign.description}
+                            </p>
+                            <div className="flex gap-3 mt-auto justify-end">
+                              <button
+                                onClick={() => handleDeleteClick(campaign)}
+                                className="px-4 py-2 border-2 border-red-600 text-red-600 rounded-lg hover:bg-red-600 hover:text-white transition-colors text-sm w-32 flex items-center justify-center"
+                              >
+                                <Trash2 size={16} className="mr-2" />
+                                Delete
+                              </button>
+                              <button
+                                onClick={() => handleEdit(campaign._id)}
+                                className="px-4 py-2 border-2 border-green-600 text-green-600 rounded-lg hover:bg-green-600 hover:text-white transition-colors text-sm w-32"
+                              >
+                                Edit Campaign
+                              </button>
+                              <button
+                                onClick={() => handleView(campaign._id)}
+                                className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm w-32"
+                              >
+                                View Details
+                              </button>
                             </div>
-                            <div className="flex items-center text-gray-600 text-sm">
-                              <Calendar size={16} className="mr-1" />
-                              <span>{new Date(campaign.createdAt).toLocaleDateString()}</span>
-                            </div>
-                          </div>
-                          <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                            {campaign.description}
-                          </p>
-                          <div className="flex gap-3 mt-auto justify-end">
-                            <button
-                              onClick={() => handleDeleteClick(campaign)}
-                              className="px-4 py-2 border-2 border-red-600 text-red-600 rounded-lg hover:bg-red-600 hover:text-white transition-colors text-sm w-32 flex items-center justify-center"
-                            >
-                              <Trash2 size={16} className="mr-2" />
-                              Delete
-                            </button>
-                            <button
-                              onClick={() => handleEdit(campaign._id)}
-                              className="px-4 py-2 border-2 border-green-600 text-green-600 rounded-lg hover:bg-green-600 hover:text-white transition-colors text-sm w-32"
-                            >
-                              Edit Campaign
-                            </button>
-                            <button
-                              onClick={() => handleView(campaign._id)}
-                              className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm w-32"
-                            >
-                              View Details
-                            </button>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>

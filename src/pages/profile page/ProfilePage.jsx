@@ -174,7 +174,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="lg:h-[90.6vh] bg-gray-50">
+    <div className="lg:h-[89.6vh] bg-gray-50">
       <div className="relative flex w-full pt-4">
         <ProfileNavbar isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} />
 

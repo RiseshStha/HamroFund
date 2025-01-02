@@ -45,7 +45,7 @@ const MyContributions = () => {
   }
 
   return (
-    <div className="lg:h-[90.6vh] bg-gray-50">
+    <div className="lg:h-[89.6vh] bg-gray-50">
       <div className="flex min-h-screen pt-4 max-md:py-10">
         <ProfileNavbar />
 
