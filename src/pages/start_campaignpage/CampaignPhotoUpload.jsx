@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Upload } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import CampaignProgressBar from '../../components/CampaignProgressBar';
+import FormAlert from '../../components/FormAlert';
 
 const CampaignPhotoUpload = () => {
   const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
+  const [alert, setAlert] = useState({ show: false, message: '' });
   
   const clearImage = () => {
     setSelectedFile(null);
@@ -53,7 +55,8 @@ const CampaignPhotoUpload = () => {
   const handleContinue = (e) => {
     e.preventDefault();
     if (!previewUrl) {
-      alert('Please select an image');
+      const message = `Please Select An Image!`;
+      setAlert({ show: true, message });
       return;
     }
     navigate("/campaignform_deatils_form");
@@ -65,6 +68,11 @@ const CampaignPhotoUpload = () => {
 
   return (
     <div className="flex justify-center items-center lg:h-[89.6vh] bg-gray-50 p-6">
+      <FormAlert 
+        message={alert.message}
+        isVisible={alert.show}
+        onClose={() => setAlert({ show: false, message: '' })}
+      />
       <div className="w-full max-w-2xl bg-white rounded-3xl shadow-sm p-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-2xl font-semibold">Create a campaign</h1>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CampaignProgressBar from '../../components/CampaignProgressBar';
+import FormAlert from '../../components/FormAlert';
 
 const CampaignForm1 = () => {
   const navigate = useNavigate();
@@ -9,6 +10,8 @@ const CampaignForm1 = () => {
     province: '',
     goal: '10000'
   });
+
+  const [alert, setAlert] = useState({ show: false, message: '' });
 
   const clearAllData = () => {
     [
@@ -56,12 +59,28 @@ const CampaignForm1 = () => {
     localStorage.setItem(`campaign_${name}`, value);
   };
 
+  // const handleContinue = (e) => {
+  //   e.preventDefault();
+  //   if (!formData.category || !formData.province || !formData.goal) {
+  //     alert('Please fill all fields');
+  //     return;
+  //   }
+  //   navigate("/campaignform_photo_upload");
+  // };
   const handleContinue = (e) => {
     e.preventDefault();
-    if (!formData.category || !formData.province || !formData.goal) {
-      alert('Please fill all fields');
+    const missingFields = [];
+    
+    if (!formData.category) missingFields.push('category');
+    if (!formData.province) missingFields.push('province');
+    if (!formData.goal) missingFields.push('goal');
+    
+    if (missingFields.length > 0) {
+      const message = `Please fill in the following required ${missingFields.length === 1 ? 'field' : 'fields'}: ${missingFields.join(', ')}`;
+      setAlert({ show: true, message });
       return;
     }
+    
     navigate("/campaignform_photo_upload");
   };
 
@@ -72,7 +91,14 @@ const CampaignForm1 = () => {
   };
 
   return (
+    <>
     <div className="flex justify-center items-center lg:h-[89.4vh] bg-gray-50 p-6">
+    <FormAlert 
+        message={alert.message}
+        isVisible={alert.show}
+        onClose={() => setAlert({ show: false, message: '' })}
+      />
+      
       <div className="w-full max-w-2xl bg-white rounded-3xl shadow-sm p-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-2xl font-semibold">Create a campaign</h1>
@@ -155,6 +181,7 @@ const CampaignForm1 = () => {
         </form>
       </div>
     </div>
+    </>
   );
 };
 
