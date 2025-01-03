@@ -10,6 +10,7 @@ const CampaignDetails = () => {
   const [error, setError] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     window.scrollTo(0, 0);

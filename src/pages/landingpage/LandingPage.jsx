@@ -9,6 +9,7 @@ const LandingPage = () => {
   const [error, setError] = useState(null);
   const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     const userDataStr = localStorage.getItem('userData');
@@ -140,7 +141,7 @@ const LandingPage = () => {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          if (userData?.profileImage) {
+                          if (token) {
                             navigate(`/payment/${campaign.id}`);
                           } else {
                             navigate("/login");

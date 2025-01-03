@@ -19,6 +19,7 @@ const SearchCampaigns = () => {
   });
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState(null);
+  const token = localStorage.getItem('token');
 
    useEffect(() => {
       const userDataStr = localStorage.getItem('userData');
@@ -163,7 +164,7 @@ const SearchCampaigns = () => {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      if (userData?.profileImage) {
+                      if (token) {
                         return (
                           navigate(`/payment/${campaign._id}`)
                         );

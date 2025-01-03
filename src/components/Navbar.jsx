@@ -40,6 +40,7 @@ const Navbar = () => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [userData, setUserData] = useState(null);
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -89,7 +90,7 @@ const Navbar = () => {
   }, [showProfileMenu]);
 
   const handleStartACampaign = () => {
-    if (userData?.profileImage) {
+    if (token) {
       return navigate("/campaignform_1");
     }
     return navigate("/login");
