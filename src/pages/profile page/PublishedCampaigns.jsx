@@ -133,8 +133,8 @@ const PublishedCampaigns = () => {
       <div className="flex h-full pt-4 max-md:py-10">
         <ProfileNavbar />
         
-        <div className="flex-1 p-0 md:px-6 max-md:py-7 overflow-y-auto">
-          <div className="bg-white rounded-xl shadow-lg px-4 lg:px-6 py-8 mx-8 min-h-[calc(100vh-120px)]">
+        <div className="flex-1 md:px-6 max-md:py-7 overflow-y-auto lg:px-8">
+          <div className="bg-white rounded-xl shadow-lg px-4 lg:px-6 py-8 min-h-[calc(100vh-120px)]">
             <div className="max-w-6xl">
               <h1 className="text-2xl font-bold mb-8">Published Campaigns</h1>
               

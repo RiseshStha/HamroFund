@@ -86,7 +86,7 @@ const CampaignDetailsForm = () => {
     }
 
     // Validate title length
-    if (formData.title.trim().length < 10) {
+    if (formData.title.trim().length < 5) {
       setAlert({
         show: true,
         message: "Title should be at least 10 characters long",
@@ -116,7 +116,9 @@ const CampaignDetailsForm = () => {
     finalFormData.append("creator", userData._id); // Add creator ID explicitly
     finalFormData.append("category", localStorage.getItem("campaign_category"));
     finalFormData.append("province", localStorage.getItem("campaign_province"));
-    finalFormData.append("goal", localStorage.getItem("campaign_goal"));
+    const goal = localStorage.getItem("campaign_goal");
+    finalFormData.append("goal", goal ? Number(goal) : ""); 
+    // finalFormData.append("goal", localStorage.getItem("campaign_goal"));
 
     // Convert base64 image back to file and append
     const imagePreview = sessionStorage.getItem("campaign_image_preview");
@@ -136,26 +138,31 @@ const CampaignDetailsForm = () => {
     try {
       const response = await createCampaignApi(finalFormData);
       if (response.data.success) {
-        // Clear storage
-        ["category", "province", "goal"].forEach((key) =>
-          localStorage.removeItem(`campaign_${key}`)
-        );
-        ["image_preview", "image_name", "image_type"].forEach((key) =>
-          sessionStorage.removeItem(`campaign_${key}`)
-        );
-        if (missingFields.length > 0) {
-          const message = `Please fill in the following required ${
-            missingFields.length === 1 ? "field" : "fields"
-          }: ${missingFields.join(", ")}`;
-          setAlert({ show: true, message });
-          return;
-        }
-        clearAllData;
-        navigate("/");
+  
+        // if (missingFields.length > 0) {
+        //   const message = `Please fill in the following required ${
+        //     missingFields.length === 1 ? "field" : "fields"
+        //   }: ${missingFields.join(", ")}`;
+        //   setAlert({ show: true, message });
+        //   return;
+        // }
+            // Clear storage
+            ["category", "province", "goal"].forEach((key) =>
+              localStorage.removeItem(`campaign_${key}`)
+            );
+            ["image_preview", "image_name", "image_type"].forEach((key) =>
+              sessionStorage.removeItem(`campaign_${key}`)
+            );
+        
+        navigate("/published-campaigns");
+        // clearAllData;
       }
     } catch (error) {
       console.error("Error creating campaign:", error);
-      alert("Failed to create campaign. Please try again.");
+      setAlert({
+        show: true,
+        message: "Failed to create campaign. Please try again."
+      });
     } finally {
       setIsSubmitting(false);
     }

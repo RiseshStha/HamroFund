@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { UserCircle, X, Menu, Home, Search, HelpCircle, LogOut, User, Settings, Bell } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import logo from "../assets/images/logo.png";
 
 // Logout Confirmation Dialog
@@ -34,6 +34,7 @@ const AlertDialog = ({ isOpen, onClose, onConfirm, title, message }) => {
 const Navbar = () => {
   const initialIsLoggedIn = !!localStorage.getItem('token');
   const navigate = useNavigate();
+  const location = useLocation();
   
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(initialIsLoggedIn);
@@ -41,6 +42,11 @@ const Navbar = () => {
   const [userData, setUserData] = useState(null);
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   const token = localStorage.getItem('token');
+
+  // Function to determine if a link is active
+  const isActivePath = (path) => {
+    return location.pathname === path;
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -77,7 +83,6 @@ const Navbar = () => {
     };
   }, [showMobileMenu]);
 
-  // Close profile menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (showProfileMenu && !event.target.closest('.profile-menu-container')) {
@@ -124,10 +129,13 @@ const Navbar = () => {
   };
 
   const MenuItem = ({ icon: Icon, text, onClick, to }) => {
+    const isActive = isActivePath(to);
     const content = (
-      <div className="flex items-center space-x-3 px-6 py-4 hover:bg-gray-50 transition-colors">
-        <Icon className="w-5 h-5 text-gray-600" />
-        <span className="text-gray-700">{text}</span>
+      <div className={`flex items-center space-x-3 px-6 py-4 hover:bg-gray-50 transition-colors ${
+        isActive ? 'text-green-600 font-bold' : 'text-gray-700'
+      }`}>
+        <Icon className="w-5 h-5" />
+        <span>{text}</span>
       </div>
     );
 
@@ -173,10 +181,24 @@ const Navbar = () => {
               Start a Campaign
             </button>
             <div className="flex items-center space-x-14">
-              <Link to="/search" className="text-black hover:text-gray-600 transition-colors">
+              <Link 
+                to="/search" 
+                className={`transition-colors ${
+                  isActivePath('/search')
+                    ? 'text-green-600 font-bold'
+                    : 'text-black hover:text-gray-600'
+                }`}
+              >
                 Campaigns
               </Link>
-              <Link to="/how-it-works" className="text-black hover:text-gray-600 transition-colors">
+              <Link 
+                to="/how-it-works" 
+                className={`transition-colors ${
+                  isActivePath('/how-it-works')
+                    ? 'text-green-600 font-bold'
+                    : 'text-black hover:text-gray-600'
+                }`}
+              >
                 How it works
               </Link>
               {isLoggedIn ? (
@@ -205,22 +227,6 @@ const Navbar = () => {
                             setShowProfileMenu(false);
                           }}
                         />
-                        <ProfileMenuItem
-                          icon={Settings}
-                          text="Settings"
-                          onClick={() => {
-                            navigate("/settings");
-                            setShowProfileMenu(false);
-                          }}
-                        />
-                        <ProfileMenuItem
-                          icon={Bell}
-                          text="Notifications"
-                          onClick={() => {
-                            navigate("/notifications");
-                            setShowProfileMenu(false);
-                          }}
-                        />
                       </div>
                       
                       {/* Logout Section */}
@@ -238,7 +244,11 @@ const Navbar = () => {
               ) : (
                 <Link
                   to="/signup"
-                  className="text-green-700 hover:text-green-800 transition-colors"
+                  className={`transition-colors ${
+                    isActivePath('/signup')
+                      ? 'text-green-600 font-bold'
+                      : 'text-green-700 hover:text-green-800'
+                  }`}
                 >
                   Sign Up
                 </Link>
@@ -334,14 +344,18 @@ const Navbar = () => {
                 <Link
                   to="/signup"
                   onClick={() => setShowMobileMenu(false)}
-                  className="block w-full px-6 py-3 text-center text-white bg-green-600 rounded-lg hover:bg-green-700"
+                  className={`block w-full px-6 py-3 text-center text-white bg-green-600 rounded-lg hover:bg-green-700 ${
+                    isActivePath('/signup') ? 'font-bold' : ''
+                  }`}
                 >
                   Sign Up
                 </Link>
                 <Link
                   to="/login"
                   onClick={() => setShowMobileMenu(false)}
-                  className="block w-full px-6 py-3 mt-3 text-center text-green-600 border border-green-600 rounded-lg hover:bg-green-50"
+                  className={`block w-full px-6 py-3 mt-3 text-center text-green-600 border border-green-600 rounded-lg hover:bg-green-50 ${
+                    isActivePath('/login') ? 'font-bold' : ''
+                  }`}
                 >
                   Login
                 </Link>

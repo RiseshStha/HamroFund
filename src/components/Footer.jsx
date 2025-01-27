@@ -20,7 +20,7 @@ const Footer = () => {
             <h3 className="font-bold text-lg">Discover</h3>
             <ul className="mt-2 space-y-1">
               <li>
-                <a href="#" className="hover:underline">
+                <a href="https://www.worldbank.org/en/events/2023/04/12/connecting-nepal-with-the-global-digital-economy" className="hover:underline">
                   Tech & Innovation
                 </a>
               </li>

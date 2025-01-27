@@ -265,13 +265,13 @@ const ProfilePage = () => {
                 >
                   {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Update'}
                 </button>
-                <button
+                {/* <button
                   onClick={handleLogout}
                   disabled={loading}
                   className="px-6 lg:px-8 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
                 >
                   Logout
-                </button>
+                </button> */}
               </div>
             </div>
           </div>
