@@ -1,9 +1,29 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { XCircle } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import axios from 'axios';
 
 const PaymentFailed = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const handleFailedPayment = async () => {
+      try {
+        const data = searchParams.get('data');
+        // If we have data from eSewa, send it to backend
+        if (data) {
+          await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/payment/failed`, {
+            params: { data }
+          });
+        }
+      } catch (error) {
+        console.error('Error handling failed payment:', error);
+      }
+    };
+
+    handleFailedPayment();
+  }, [searchParams]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -16,7 +36,7 @@ const PaymentFailed = () => {
           </p>
           <div className="space-x-4">
             <button
-              onClick={() => navigate(-2)} // Go back to payment form
+              onClick={() => navigate(-2)}
               className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
             >
               Try Again

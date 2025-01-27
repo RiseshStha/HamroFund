@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { initiatePaymentApi, getCampaignByIdApi } from '../../apis/Api';  // Add this import
+import { initiatePaymentApi, getCampaignByIdApi } from '../../apis/Api';
 import { Loader2 } from 'lucide-react';
 
 const PaymentForm = () => {
   const [loading, setLoading] = useState(false);
-  const [pageLoading, setPageLoading] = useState(true);  // Add this for initial loading
+  const [pageLoading, setPageLoading] = useState(true);
   const [amount, setAmount] = useState('100');
   const [campaign, setCampaign] = useState(null);
   const { id: campaignId } = useParams();
@@ -13,27 +13,27 @@ const PaymentForm = () => {
 
   useEffect(() => {
     const fetchCampaignDetails = async () => {
-      setPageLoading(true);
+      if (!campaignId) {
+        navigate('/');
+        return;
+      }
+
       try {
         const response = await getCampaignByIdApi(campaignId);
-        console.log('Campaign response:', response);  // Debug log
         if (response.data && response.data.campaign) {
           setCampaign(response.data.campaign);
         } else {
-          console.error('Invalid campaign data:', response);
-          navigate(-1);
+          navigate('/');
         }
       } catch (error) {
         console.error('Error fetching campaign:', error);
-        navigate(-1);
+        navigate('/');
       } finally {
         setPageLoading(false);
       }
     };
-    
-    if (campaignId) {
-      fetchCampaignDetails();
-    }
+
+    fetchCampaignDetails();
   }, [campaignId, navigate]);
 
   const handlePayment = async (e) => {
@@ -52,7 +52,8 @@ const PaymentForm = () => {
         amount: parseFloat(amount)
       });
 
-      if (response.data.success) {
+      if (response.data?.success) {
+        // Create and submit eSewa form
         const form = document.createElement('form');
         form.setAttribute('method', 'POST');
         form.setAttribute('action', response.data.data.paymentUrl);
@@ -68,7 +69,7 @@ const PaymentForm = () => {
         document.body.appendChild(form);
         form.submit();
       } else {
-        alert('Failed to initiate payment. Please try again.');
+        throw new Error('Payment initiation failed');
       }
     } catch (error) {
       console.error('Payment error:', error);
@@ -86,34 +87,40 @@ const PaymentForm = () => {
     );
   }
 
+  if (!campaign) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <p className="text-red-500">Campaign not found</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex justify-center items-center lg:h-[90.6vh] bg-gray-50 p-6">
+    <div className="flex justify-center items-center min-h-screen bg-gray-50 p-6">
       <div className="w-full max-w-2xl bg-white rounded-3xl shadow-sm p-8">
         <h1 className="text-2xl font-semibold mb-8">Funding the campaign</h1>
 
-        {campaign && (
-          <div className="flex items-start space-x-6 mb-8">
-            <div className="w-48 min-w-48 overflow-hidden rounded-lg">
-              <img 
-                src={campaign.image ? `${import.meta.env.VITE_BACKEND_URL}/campaigns/${campaign.image}` : "/api/placeholder/400/320"}
-                alt={campaign.title}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = "/api/placeholder/400/320";
-                }}
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <p className="text-lg">You're contributing to {campaign.title}</p>
-              <div>
-                <p className="text-gray-600">Organizer</p>
-                <p className="text-lg font-semibold">{campaign.creator?.fullName || 'Anonymous'}</p>
-              </div>
+        <div className="flex items-start space-x-6 mb-8">
+          <div className="w-48 h-32 min-w-48 overflow-hidden rounded-lg">
+            <img 
+              src={campaign.image ? `${import.meta.env.VITE_BACKEND_URL}/campaigns/${campaign.image}` : "/api/placeholder/400/320"}
+              alt={campaign.title}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "/api/placeholder/400/320";
+              }}
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <p className="text-lg font-medium">{campaign.title}</p>
+            <div>
+              <p className="text-gray-600">Organizer</p>
+              <p className="text-lg font-semibold">{campaign.creator?.fullName || 'Anonymous'}</p>
             </div>
           </div>
-        )}
+        </div>
 
         <form onSubmit={handlePayment} className="space-y-6">
           <div className="space-y-2">
@@ -134,7 +141,7 @@ const PaymentForm = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full p-3 bg-orange-400 text-white rounded-lg hover:bg-orange-500 transition-colors flex items-center justify-center"
+              className="w-full p-3 bg-orange-400 text-white rounded-lg hover:bg-orange-500 transition-colors flex items-center justify-center disabled:opacity-50"
             >
               {loading ? (
                 <Loader2 className="w-6 h-6 animate-spin" />

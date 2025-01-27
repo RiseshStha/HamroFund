@@ -11,28 +11,46 @@ const PaymentSuccess = () => {
   useEffect(() => {
     const verifyPayment = async () => {
       try {
+        // Get all possible parameters
+        const data = searchParams.get('data');
         const oid = searchParams.get('oid');
         const amt = searchParams.get('amt');
         const refId = searchParams.get('refId');
 
-        if (!oid || !amt || !refId) {
-          throw new Error('Missing payment parameters');
+        // Construct verification URL with available parameters
+        let verificationUrl = `${import.meta.env.VITE_BACKEND_URL}/api/payment/verify`;
+        let params = {};
+
+        if (data) {
+          params.data = data;
+        } else if (oid && amt && refId) {
+          params = { oid, amt, refId };
+        } else {
+          // If no valid parameters found, check the payment status directly
+          const transactionId = searchParams.get('txn') || searchParams.get('transaction_id');
+          if (transactionId) {
+            params = { transaction_id: transactionId };
+          }
         }
 
-        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/payment/verify`, {
-          params: { oid, amt, refId }
-        });
+        console.log('Verification params:', params); // Debug log
+
+        const response = await axios.get(verificationUrl, { params });
 
         if (response.data.success) {
           setTimeout(() => {
             navigate('/my-contributions');
           }, 3000);
         } else {
-          throw new Error('Payment verification failed');
+          navigate('/payment/failed');
         }
       } catch (error) {
         console.error('Verification error:', error);
-        navigate('/payment/failed');
+        // Don't navigate away immediately on error
+        // The payment might still be processing
+        setTimeout(() => {
+          navigate('/my-contributions');
+        }, 3000);
       } finally {
         setVerifying(false);
       }
